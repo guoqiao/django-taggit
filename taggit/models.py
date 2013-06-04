@@ -39,6 +39,7 @@ class TagBase(models.Model):
                     sid = transaction.savepoint(**trans_kwargs)
                     res = super(TagBase, self).save(*args, **kwargs)
                     transaction.savepoint_commit(sid, **trans_kwargs)
+                    print '%s -----> %s' % (self.name,res.slug)
                     return res
                 except IntegrityError:
                     transaction.savepoint_rollback(sid, **trans_kwargs)
@@ -47,9 +48,12 @@ class TagBase(models.Model):
             return super(TagBase, self).save(*args, **kwargs)
 
     def slugify(self, tag, i=None):
-        slug = default_slugify(tag)
+        #slug = default_slugify(tag)
+        from unidecode import unidecode
+        slug = unidecode(tag.strip()).strip().lower().replace(' ','-')
+        slug = default_slugify(slug).strip('-')
         if i is not None:
-            slug += "_%d" % i
+            slug += "-%d" % i
         return slug
 
 
