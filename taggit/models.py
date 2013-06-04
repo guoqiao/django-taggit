@@ -39,7 +39,7 @@ class TagBase(models.Model):
                     sid = transaction.savepoint(**trans_kwargs)
                     res = super(TagBase, self).save(*args, **kwargs)
                     transaction.savepoint_commit(sid, **trans_kwargs)
-                    print '%s -----> %s' % (self.name,res.slug)
+                    print '%s -----> %s' % (self.name,self.slug)
                     return res
                 except IntegrityError:
                     transaction.savepoint_rollback(sid, **trans_kwargs)
