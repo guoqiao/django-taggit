@@ -224,11 +224,19 @@ class _TaggableManager(models.Manager):
 
         results = []
         for result in qs:
-            obj = items[
-                tuple(result[k] for k in lookup_keys)
-            ]
-            obj.similar_tags = result["n"]
-            results.append(obj)
+            #obj = items[
+                #tuple(result[k] for k in lookup_keys)
+            #]
+            #obj.similar_tags = result["n"]
+            #results.append(obj)
+
+            # fix key error. by guoqiao, 2013.06.06
+            x = [result[k] for k in lookup_keys]
+            key = tuple(x)
+            obj = items.get(key,'')
+            if obj:
+                obj.similar_tags = result["n"]
+                results.append(obj)
         return results
 
 
